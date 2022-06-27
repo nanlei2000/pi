@@ -23,8 +23,8 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			pi := Calc(n).String()
-			fmt.Printf("%s.%s", string(pi[0]), string(pi[1:]))
+			pi := Calc(n)
+			fmt.Println(Fmt(pi))
 
 			return nil
 		},

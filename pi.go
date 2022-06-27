@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/big"
 )
 
@@ -44,4 +45,9 @@ func FloorDiv(z, x, y *big.Int) {
 	if z.Cmp(big.NewInt(0)) == -1 && m.Cmp(big.NewInt(0)) == +1 {
 		z.Add(z, big.NewInt(-1))
 	}
+}
+
+func Fmt(pi *big.Int) string {
+	piStr := pi.String()
+	return fmt.Sprintf("%s.%s", string(piStr[0]), string(piStr[1:]))
 }
