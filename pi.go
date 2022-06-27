@@ -5,6 +5,11 @@ import (
 	"math/big"
 )
 
+var (
+	n25    = big.NewInt(-25)
+	n57121 = big.NewInt(-57121)
+)
+
 func Calc(n uint64) *big.Int {
 	t := n + 10
 
@@ -24,8 +29,8 @@ func Calc(n uint64) *big.Int {
 	n *= 2
 
 	for i := uint64(3); i < n; i += 2 {
-		FloorDiv(x1, x1, big.NewInt(-25))
-		FloorDiv(x2, x2, big.NewInt(-57121))
+		FloorDiv(x1, x1, n25)
+		FloorDiv(x2, x2, n57121)
 		x := new(big.Int)
 
 		x.Add(x1, x2)
