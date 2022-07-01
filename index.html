@@ -9,39 +9,29 @@ license that can be found in the LICENSE file.
 <head>
   <meta charset="utf-8" />
   <title>Go wasm</title>
+  <script src="./static/wasm_exec.js"></script>
 </head>
 
 <body>
-  <script src="wasm_exec.js"></script>
-
-  <script>
-    if (!WebAssembly.instantiateStreaming) {
-      // polyfill
-      WebAssembly.instantiateStreaming = async (resp, importObject) => {
-        const source = await (await resp).arrayBuffer();
-        return await WebAssembly.instantiate(source, importObject);
-      };
-    }
-
-    const go = new Go();
-
-    let mod, inst;
-
-    WebAssembly.instantiateStreaming(fetch("lib.wasm"), go.importObject).then(
-      result => {
-        mod = result.module;
-        inst = result.instance;
-        document.getElementById("runButton").disabled = false;
-      }
-    );
-
-    async function run() {
-      await go.run(inst);
-      inst = await WebAssembly.instantiate(mod, go.importObject); // reset instance
-    }
-  </script>
-
-  <button onClick="run();" id="runButton" disabled>Run</button>
+  <h2>Calc pi</h2>
+  <input type="number" value="100" id="num_input" />
+  <button id="runButton" disabled>Calc</button>
+  <p id="pre_id" style="word-wrap: break-word;"></p>
 </body>
+
+<script>
+  const go = new Go();
+  WebAssembly.instantiateStreaming(fetch("./static/lib.wasm"), go.importObject)
+    .then((result) => {
+      go.run(result.instance);
+      document.getElementById("runButton").disabled = false
+    });
+
+  document.getElementById("runButton").addEventListener('click', async () => {
+    const val = Number(document.getElementById("num_input").value)
+    const pi = window.calc(val)
+    document.getElementById('pre_id').innerText = pi
+  })
+</script>
 
 </html>
