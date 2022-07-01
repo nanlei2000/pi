@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/nanlei2000/pi/pi"
 	"github.com/urfave/cli/v2"
 )
 
@@ -32,11 +33,12 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			now := time.Now().UnixMilli()
-			pi := Calc(n)
-			fmt.Printf("time: %d ms \n", time.Now().UnixMilli()-now)
+			start := time.Now()
+			piRes := pi.Calc(n)
+			end := time.Now()
+			fmt.Printf("time: %v \n", end.Sub(start))
 			if print {
-				fmt.Println(Fmt(pi))
+				fmt.Println(pi.Fmt(piRes))
 			}
 			return nil
 		},
