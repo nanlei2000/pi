@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<!--
-Copyright 2018 The Go Authors. All rights reserved.
-Use of this source code is governed by a BSD-style
-license that can be found in the LICENSE file.
--->
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <title>Go wasm</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc pi</title>
   <script src="./static/wasm_exec.js"></script>
 </head>
 
@@ -16,21 +13,35 @@ license that can be found in the LICENSE file.
   <h2>Calc pi</h2>
   <input type="number" value="100" id="num_input" />
   <button id="runButton" disabled>Calc</button>
-  <p id="pre_id" style="word-wrap: break-word;"></p>
+  <p id="pi_time"></p>
+  <p id="pi_result" style="word-wrap: break-word;"></p>
 </body>
 
 <script>
   const go = new Go();
+  const runBtn = document.getElementById("runButton")
   WebAssembly.instantiateStreaming(fetch("./static/lib.wasm"), go.importObject)
     .then((result) => {
       go.run(result.instance);
-      document.getElementById("runButton").disabled = false
+      runBtn.disabled = false
     });
 
-  document.getElementById("runButton").addEventListener('click', async () => {
-    const val = Number(document.getElementById("num_input").value)
-    const pi = window.calc(val)
-    document.getElementById('pre_id').innerText = pi
+  runBtn.addEventListener('click', async () => {
+    try {
+      console.log('calculating')
+      runBtn.disabled = true
+
+      const val = Number(document.getElementById("num_input").value)
+      const start = Date.now()
+      const pi = window.calc(val)
+      const duration = Date.now() - start
+      document.getElementById('pi_time').innerText = `time: ${duration} ms`
+      document.getElementById('pi_result').innerText = pi
+    } catch (error) {
+      console.error(error)
+    } finally {
+      runBtn.disabled = false
+    }
   })
 </script>
 
