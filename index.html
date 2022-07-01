@@ -7,29 +7,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calc pi</title>
   <script src="./static/wasm_exec.js"></script>
+  <script src="./js/pi.js"></script>
 </head>
 
 <body>
   <h2>Calc pi</h2>
   <input type="number" value="100" id="num_input" />
-  <button id="runButton" disabled>Calc</button>
+  <button id="run_button_go" disabled>Calc( go wasm )</button>
+  <button id="run_button_js" disabled>Calc( js )</button>
   <p id="pi_time"></p>
   <p id="pi_result" style="word-wrap: break-word;"></p>
 </body>
 
 <script>
   const go = new Go();
-  const runBtn = document.getElementById("runButton")
+  const runBtnGo = document.getElementById("run_button_go")
+  const runBtnJs = document.getElementById("run_button_js")
   WebAssembly.instantiateStreaming(fetch("./static/lib.wasm"), go.importObject)
     .then((result) => {
       go.run(result.instance);
-      runBtn.disabled = false
+      runBtnGo.disabled = false
+      runBtnJs.disabled = false
     });
 
-  runBtn.addEventListener('click', async () => {
+  runBtnGo.addEventListener('click', async () => {
     try {
       console.log('calculating')
-      runBtn.disabled = true
+      runBtnGo.disabled = true
+      runBtnJs.disabled = true
 
       const val = Number(document.getElementById("num_input").value)
       const start = Date.now()
@@ -40,7 +45,28 @@
     } catch (error) {
       console.error(error)
     } finally {
-      runBtn.disabled = false
+      runBtnGo.disabled = false
+      runBtnJs.disabled = false
+    }
+  })
+
+  runBtnJs.addEventListener('click', async () => {
+    try {
+      console.log('calculating')
+      runBtnGo.disabled = true
+      runBtnJs.disabled = true
+
+      const val = Number(document.getElementById("num_input").value)
+      const start = Date.now()
+      const pi = calculate(val)
+      const duration = Date.now() - start
+      document.getElementById('pi_time').innerText = `time: ${duration} ms`
+      document.getElementById('pi_result').innerText = pi
+    } catch (error) {
+      console.error(error)
+    } finally {
+      runBtnGo.disabled = false
+      runBtnJs.disabled = false
     }
   })
 </script>
